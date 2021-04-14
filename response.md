@@ -1,13 +1,13 @@
 # Response
 ## API Document (required)
-  Import [this](#api-document-required) json file to Postman
+  Please see [https://github.com/gahunghsu/phantom_mask/blob/master/API]
 
 ## Import Data Commands (required)
-  * `rake import:pharmacy[PATH_TO_FILE]`
-  * `rake import:user[PATH_TO_FILE]`
+  I don't know how to use rank, so I use Java to do ETL. First and second API is the way to import data.
 
 ## Test Coverage Report(optional)
   check report [here](#test-coverage-reportoptional)
   
 ## Demo Site Url (optional)
-  demo ready on [heroku](#demo-site-url-optional)
+  Using https://springboot-postgres-gaga.herokuapp.com to replace API's http://localhost:8080/
+  
