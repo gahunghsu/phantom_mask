@@ -10,4 +10,6 @@
   
 ## Demo Site Url (optional)
   Using https://springboot-postgres-gaga.herokuapp.com to replace API's http://localhost:8080
-  
+
+## Docker
+  There is a docker-compose.yaml file, it would help you to create two containers which include spring boot application and postgres db
