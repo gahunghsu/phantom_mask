@@ -1,0 +1,210 @@
+1. Import users info to database.
+URL : http://localhost:8080/api/v1/userJson
+Method:POST
+Params:JSON
+[
+  {
+    "name": "Eric Underwood",
+    "cashBalance": 952.69,
+    "purchaseHistories": [
+      {
+        "pharmacyName": "Neighbors",
+        "maskName": "Masquerade (black) (3 per pack)",
+        "transactionAmount": 9.26,
+        "transactionDate": "2021-01-02 20:41:02"
+      }
+    ]
+  }
+]
+Success Response:
+Code: 200 
+Content: Success initial user data
+
+2. Import pharmacise info to database.
+URL : http://localhost:8080/api/v1/pharmacyJson
+Method:POST
+Params:JSON
+[
+  {
+    "name": "Better You",
+    "cashBalance": 777.61,
+    "openingHours": "Mon, Wed 12:56 - 21:58 / Tue 13:06 - 22:42 / Fri - Sat 17:09 - 20:20 / Sun 07:10 - 09:33",
+    "masks": [
+      {
+        "name": "AniMask (blue) (10 per pack)",
+        "price": 33.65
+      }
+    ]
+  }
+]
+Success Response:
+Code: 200 
+Content: Success initial pharmacy data
+
+3. List all pharmacies that are open at a certain datetime
+URL : http://localhost:8080/api/v1/pharmacies/2021-04-14 12:00:31
+Method:GET
+Url Params: string format as YYYY-MM-DD HH24:MI:SS(2021-04-14 12:00:31)
+Success Response: Pharmacy name list as below
+[
+    "Apotheco",
+    "Atlas Drugs",
+    "DFW Wellness",
+    "Drug Blend",
+    "Longhorn Pharmacy",
+    "PharmaMed"
+]
+
+4. List all pharmacies that are open on a day of the week, at a certain time
+URL : http://localhost:8080/api/v1/pharmacies/week/12:00:31
+Method:GET
+Url Params: string format HH24:MI:SS(12:00:31)
+Success Response: Pharmacy name and day of week as below
+[
+    {
+        "id": 2174,
+        "pharName": "Apotheco",
+        "week": "Mon",
+        "open": "10:06",
+        "close": "14:26"
+    }
+ ]
+ 
+5. List all masks that are sold by a given pharmacy, sorted by mask name or mask price
+URL : http://localhost:8080/api/v1/mask/pharmacy/Cash Saver Pharmacy/name
+Method:GET
+Url Params: pharmacy name and sorted condition such as name or price
+Success Response: Sorted masks info 
+[
+    {
+        "maskId": 2033,
+        "name": "AniMask (green) (10 per pack)",
+        "price": 49.21,
+        "pharName": "Cash Saver Pharmacy"
+    },
+    {
+        "maskId": 2032,
+        "name": "Free to Roam (black) (3 per pack)",
+        "price": 13.83,
+        "pharName": "Cash Saver Pharmacy"
+    }
+]
+
+6. List all pharmacies that have more or less than x mask products within a price range
+URL : http://localhost:8080/api/v1/mask/pharmacy/20/40/3/less
+Method:GET
+Url Params: low price, high price, x and more/less 
+Success Response: Masks name list
+[
+    "Apotheco",
+    "Assured Rx",
+    "Atlas Drugs",
+    "Better You",
+    "Heartland Pharmacy",
+    "Longhorn Pharmacy",
+    "MedSavvy",
+    "Medlife",
+    "Pill Pack",
+    "PrecisionMed",
+    "Wellcare"
+]
+
+7. Search for pharmacies or masks by name, ranked by relevance to search term
+URL : http://localhost:8080/api/v1/mask/pharmacy/name
+Method:POST
+Data Params: condition could be given a part of name and type include mask/phar/all for query only masks or pharmacies or all of them
+{
+    "condition":"PACK|MASK|green",
+    "type":"mask"
+}
+Success Response: Name list which sorted by rank by relevance to search term
+[
+    {
+        "type": "MASK",
+        "name": "AniMask (green) (10 per pack)"
+    },
+    {
+        "type": "MASK",
+        "name": "Free to Roam (green) (3 per pack)"
+    },
+    {
+        "type": "MASK",
+        "name": "AniMask (black) (10 per pack)"
+    }
+]
+
+8. The top x users by total transaction amount of masks within a date range
+URL : http://localhost:8080/api/v1/users/amt
+Method:POST
+Data Params: 
+{
+    "startDate":"2021-01-01",
+    "endDate":"2021-01-07",
+    "x":"10"
+}
+Success Response: users list
+[
+    "Tamara Dean",
+    "Jo Barton",
+    "Bobbie Russell",
+    "Ruby Andrews",
+    "Sherri Lynch",
+    "Lawrence Fletcher",
+    "Eric Underwood",
+    "Mindy Perkins",
+    "Connie Vasquez",
+    "Cassandra Fields"
+]
+
+9. The total amount of masks and dollar value of transactions that happened within a date range
+URL : http://localhost:8080/api/v1/transtions
+Method:POST
+Data Params: 
+{
+    "startDate":"2021-01-01",
+    "endDate":"2021-01-07"
+}
+Success Response: first one is amount of masks and second one is dollar value
+[
+    [
+        133,
+        394.26
+    ]
+]
+
+10. Edit pharmacy name, mask name, and mask price
+URL : http://localhost:8080/api/v1/pharmacy/Better You/AniMask (blue) (10 per pack)
+Method:PUT
+URL Parms: Given a pharmacy name and mask name
+Data Params: New pharmacy name, mask name and mask price
+{
+    "name": "Good for you",
+    "masks": [
+        {
+            "name": "Made in taiwan (purple) (100 per pack)",
+            "price": "200"
+        }
+    ]
+}
+Success Response: Update Success
+
+11. Remove a mask product from a pharmacy given by mask name
+URL : http://localhost:8080/api/v1/mask/Made in taiwan (purple) (100 per pack)
+Method:DELETE
+URL Parms: Given a mask name
+Success Response: 200
+
+12. Process a user purchases a mask from a pharmacy, and handle all relevant data changes in an atomic transaction
+URL : http://localhost:8080/api/v1/purchase/mask
+Method:POST
+Data Params: 
+[
+    {
+        "userName": "Peggy Maxwell",
+        "pharmacyName": "Neighbors",
+        "maskName": "Masquerade (black) (3 per pack)",
+        "transactionAmount": 9.26,
+        "transactionDate": "2021-01-02 20:41:02"
+    }
+]
+Success Response: Purchase Success
