@@ -9,5 +9,5 @@
   check report [here](#test-coverage-reportoptional)
   
 ## Demo Site Url (optional)
-  Using https://springboot-postgres-gaga.herokuapp.com to replace API's http://localhost:8080/
+  Using https://springboot-postgres-gaga.herokuapp.com to replace API's http://localhost:8080
   
